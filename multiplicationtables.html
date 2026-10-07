@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="适合小学二年级背诵的九九乘法口诀表">
+  <title>九九乘法口诀表</title>
+  <style>
+    :root {
+      --paper: #f7f1df;
+      --paper-deep: #ece1bd;
+      --ink: #142c4a;
+      --ink-soft: #39516a;
+      --navy: #17446e;
+      --mustard: #d7ad43;
+      --mustard-light: #f4dd96;
+      --green: #dcebdc;
+      --blue: #dcebf0;
+      --peach: #f4dfd1;
+      --line: #91a4ad;
+      --white: #fffdf7;
+      --shadow: 0 3px 0 rgba(20, 44, 74, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--paper-deep); }
+    body {
+      margin: 0;
+      min-width: 300px;
+      color: var(--ink);
+      font-family: "KaiTi", "STKaiti", "Kaiti SC", "Noto Serif SC", serif;
+      background:
+        radial-gradient(circle at 16% 14%, rgba(255,255,255,.82) 0 1px, transparent 1.5px) 0 0 / 17px 19px,
+        linear-gradient(110deg, rgba(255,255,255,.45), transparent 38%),
+        var(--paper);
+    }
+
+    .worksheet {
+      width: min(100%, 1080px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(24px, 5vw, 58px) clamp(16px, 5vw, 64px) 44px;
+      border-inline: 1px solid rgba(20, 44, 74, .14);
+      box-shadow: 0 0 28px rgba(20, 44, 74, .09);
+    }
+
+    .eyebrow, .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif;
+      font-weight: 750;
+      letter-spacing: .04em;
+    }
+    .number-dot {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font: 800 17px/1 system-ui, sans-serif;
+      box-shadow: 0 2px 0 rgba(11, 35, 61, .28);
+    }
+
+    header { padding-bottom: 23px; border-bottom: 2px dashed rgba(57, 81, 106, .48); }
+    .eyebrow { font-size: .95rem; }
+    h1 {
+      margin: 13px 0 7px;
+      color: var(--ink);
+      font-size: clamp(2rem, 5vw, 3.45rem);
+      line-height: 1.14;
+      letter-spacing: .09em;
+    }
+    .cue {
+      display: inline-block;
+      margin: 0;
+      padding: 9px 17px 10px;
+      border-radius: 8px 18px 18px 8px;
+      background: var(--mustard-light);
+      color: #2c4051;
+      font-size: clamp(1rem, 2.6vw, 1.22rem);
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+    .cue::before { content: "★ "; color: #a87514; }
+
+    .tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 24px 0 25px;
+      padding: 14px 17px;
+      border: 1px solid rgba(174, 130, 27, .35);
+      border-radius: 14px;
+      background: linear-gradient(90deg, #f2d783, #f7e8b8);
+      font-size: clamp(1rem, 2.5vw, 1.17rem);
+      line-height: 1.65;
+    }
+    .tip strong { color: var(--navy); white-space: nowrap; }
+    .tip p { margin: 0; }
+
+    .practice {
+      margin: 0 0 28px;
+      padding: 22px clamp(16px, 3vw, 28px);
+      border: 1.5px dashed rgba(57, 81, 106, .55);
+      border-radius: 13px;
+      background: rgba(255, 253, 247, .63);
+    }
+    .section-heading { margin-bottom: 16px; font-size: 1.08rem; }
+    .practice-body { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; }
+    .question-box {
+      min-height: 79px;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      border-bottom: 2px dotted var(--line);
+      text-align: center;
+      font-size: clamp(1.35rem, 4.3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+    .question-box .placeholder { color: var(--ink-soft); font-size: .97rem; letter-spacing: .02em; font-weight: 600; }
+    .answer { margin-top: 4px; color: #8c4a32; }
+    .answer[hidden] { display: none; }
+    .practice-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+
+    button {
+      border: 0;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .action-button {
+      padding: 10px 15px;
+      border: 1px solid rgba(20, 44, 74, .24);
+      border-radius: 9px;
+      background: var(--white);
+      color: var(--navy);
+      font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif;
+      font-size: .95rem;
+      font-weight: 750;
+      box-shadow: 0 2px 0 rgba(20, 44, 74, .17);
+      transition: transform .16s ease, background-color .16s ease;
+    }
+    .action-button:hover { background: #e7f0f0; transform: translateY(-1px); }
+    .action-button.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .action-button.primary:hover { background: #0d385f; }
+    .action-button:disabled { cursor: not-allowed; opacity: .55; transform: none; }
+
+    .table-intro { margin: 0 0 13px; color: var(--ink-soft); font-size: 1rem; }
+    .mnemonic-table { border-top: 2px dotted rgba(57, 81, 106, .55); }
+    .mnemonic-row {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 15px;
+      align-items: stretch;
+      padding: 14px 0;
+      border-bottom: 2px dotted rgba(57, 81, 106, .47);
+    }
+    .row-toggle {
+      width: 100%;
+      min-height: 56px;
+      padding: 8px;
+      border: 1px solid rgba(20, 44, 74, .15);
+      border-radius: 11px;
+      background: #e7edf0;
+      color: var(--navy);
+      font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif;
+      font-size: .93rem;
+      font-weight: 800;
+      line-height: 1.35;
+      box-shadow: 0 2px 0 rgba(20, 44, 74, .1);
+      transition: background-color .16s ease, transform .16s ease;
+    }
+    .row-toggle:hover { background: #d2e3e9; transform: translateY(-1px); }
+    .cards { display: flex; flex-wrap: wrap; gap: 9px; align-content: center; }
+    .mnemonic-card {
+      min-width: 120px;
+      padding: 11px 14px;
+      border: 1px solid rgba(20, 44, 74, .15);
+      border-radius: 9px;
+      background: var(--green);
+      color: var(--ink);
+      font-size: clamp(1.1rem, 2.6vw, 1.35rem);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: .04em;
+      box-shadow: var(--shadow);
+      transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease;
+    }
+    .mnemonic-row:nth-child(3n + 2) .mnemonic-card { background: var(--blue); }
+    .mnemonic-row:nth-child(3n) .mnemonic-card { background: var(--peach); }
+    .mnemonic-card:hover { transform: translateY(-2px) rotate(-.5deg); box-shadow: 0 5px 0 rgba(20, 44, 74, .13); }
+    .mnemonic-card[aria-pressed="true"], .mnemonic-row.row-selected .row-toggle {
+      background: var(--mustard-light);
+      outline: 2px solid #b58420;
+      outline-offset: 1px;
+    }
+    .mnemonic-row.row-selected { background: rgba(241, 213, 131, .15); }
+
+    button:focus-visible {
+      outline: 3px solid #d06f32;
+      outline-offset: 3px;
+    }
+    footer {
+      margin-top: 25px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif;
+      font-size: .88rem;
+    }
+
+    @media (max-width: 620px) {
+      .worksheet { padding-inline: 16px; }
+      .practice-body { grid-template-columns: 1fr; }
+      .practice-actions { justify-content: center; }
+      .mnemonic-row { grid-template-columns: 1fr; gap: 9px; }
+      .row-toggle { min-height: auto; text-align: left; padding-inline: 14px; }
+      .cards { gap: 8px; }
+      .mnemonic-card { min-width: 0; flex: 1 1 132px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="worksheet">
+    <header>
+      <p class="eyebrow"><span class="number-dot">1</span>数学小练习 · 背口诀</p>
+      <h1>九九乘法口诀表</h1>
+      <p class="cue">跟着读一读，拍手背一背！</p>
+    </header>
+
+    <aside class="tip" aria-label="乘号小提示">
+      <strong>你知道吗？</strong>
+      <p>“×”读作“乘”。比如 <b>3 × 4</b>，就是 3 和 4 做乘法；答案叫做“积”。</p>
+    </aside>
+
+    <section class="practice" aria-labelledby="practice-title">
+      <h2 class="section-heading" id="practice-title"><span class="number-dot">2</span>抽一题，试一试</h2>
+      <div class="practice-body">
+        <div class="question-box" id="question-box" aria-live="polite">
+          <span class="placeholder">先抽一题，再说出答案吧！</span>
+        </div>
+        <div class="practice-actions">
+          <button class="action-button primary" type="button" id="random-button">随机抽一题</button>
+          <button class="action-button" type="button" id="reveal-button" disabled>显示答案</button>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="table-title">
+      <h2 class="section-heading" id="table-title"><span class="number-dot">3</span>按行读一读</h2>
+      <p class="table-intro">点一张口诀卡片作记号；也可以点左边的行标题，整行一起标出来。</p>
+      <div class="mnemonic-table" aria-label="完整九九乘法口诀表">
+        <article class="mnemonic-row" data-row="1">
+          <button class="row-toggle" type="button" aria-pressed="false">1 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="1" data-answer="1">一一得一</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="2">
+          <button class="row-toggle" type="button" aria-pressed="false">2 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="2" data-answer="2">一二得二</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="2" data-answer="4">二二得四</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="3">
+          <button class="row-toggle" type="button" aria-pressed="false">3 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="3" data-answer="3">一三得三</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="3" data-answer="6">二三得六</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="3" data-b="3" data-answer="9">三三得九</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="4">
+          <button class="row-toggle" type="button" aria-pressed="false">4 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="4" data-answer="4">一四得四</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="4" data-answer="8">二四得八</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="3" data-b="4" data-answer="12">三四十二</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="4" data-b="4" data-answer="16">四四十六</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="5">
+          <button class="row-toggle" type="button" aria-pressed="false">5 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="5" data-answer="5">一五得五</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="5" data-answer="10">二五一十</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="3" data-b="5" data-answer="15">三五十五</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="4" data-b="5" data-answer="20">四五二十</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="5" data-b="5" data-answer="25">五五二十五</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="6">
+          <button class="row-toggle" type="button" aria-pressed="false">6 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="6" data-answer="6">一六得六</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="6" data-answer="12">二六十二</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="3" data-b="6" data-answer="18">三六十八</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="4" data-b="6" data-answer="24">四六二十四</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="5" data-b="6" data-answer="30">五六三十</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="6" data-b="6" data-answer="36">六六三十六</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="7">
+          <button class="row-toggle" type="button" aria-pressed="false">7 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="7" data-answer="7">一七得七</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="7" data-answer="14">二七十四</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="3" data-b="7" data-answer="21">三七二十一</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="4" data-b="7" data-answer="28">四七二十八</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="5" data-b="7" data-answer="35">五七三十五</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="6" data-b="7" data-answer="42">六七四十二</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="7" data-b="7" data-answer="49">七七四十九</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="8">
+          <button class="row-toggle" type="button" aria-pressed="false">8 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="8" data-answer="8">一八得八</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="8" data-answer="16">二八十六</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="3" data-b="8" data-answer="24">三八二十四</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="4" data-b="8" data-answer="32">四八三十二</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="5" data-b="8" data-answer="40">五八四十</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="6" data-b="8" data-answer="48">六八四十八</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="7" data-b="8" data-answer="56">七八五十六</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="8" data-b="8" data-answer="64">八八六十四</button>
+          </div>
+        </article>
+        <article class="mnemonic-row" data-row="9">
+          <button class="row-toggle" type="button" aria-pressed="false">9 的口诀<br>整行标记</button>
+          <div class="cards">
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="1" data-b="9" data-answer="9">一九得九</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="2" data-b="9" data-answer="18">二九十八</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="3" data-b="9" data-answer="27">三九二十七</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="4" data-b="9" data-answer="36">四九三十六</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="5" data-b="9" data-answer="45">五九四十五</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="6" data-b="9" data-answer="54">六九五十四</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="7" data-b="9" data-answer="63">七九六十三</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="8" data-b="9" data-answer="72">八九七十二</button>
+            <button class="mnemonic-card" type="button" aria-pressed="false" data-a="9" data-b="9" data-answer="81">九九八十一</button>
+          </div>
+        </article>
+      </div>
+    </section>
+    <footer>小提醒：每天读两遍，口诀会越来越熟！</footer>
+  </main>
+
+  <script>
+    (() => {
+      const cards = Array.from(document.querySelectorAll('.mnemonic-card'));
+      const rowToggles = Array.from(document.querySelectorAll('.row-toggle'));
+      const randomButton = document.getElementById('random-button');
+      const revealButton = document.getElementById('reveal-button');
+      const questionBox = document.getElementById('question-box');
+      let currentQuestion = null;
+
+      cards.forEach((card) => {
+        card.addEventListener('click', () => {
+          const selected = card.getAttribute('aria-pressed') === 'true';
+          card.setAttribute('aria-pressed', String(!selected));
+        });
+      });
+
+      rowToggles.forEach((toggle) => {
+        toggle.addEventListener('click', () => {
+          const row = toggle.closest('.mnemonic-row');
+          const selected = toggle.getAttribute('aria-pressed') === 'true';
+          const nextState = !selected;
+          toggle.setAttribute('aria-pressed', String(nextState));
+          row.classList.toggle('row-selected', nextState);
+          row.querySelectorAll('.mnemonic-card').forEach((card) => {
+            card.setAttribute('aria-pressed', String(nextState));
+          });
+        });
+      });
+
+      randomButton.addEventListener('click', () => {
+        currentQuestion = cards[Math.floor(Math.random() * cards.length)];
+        const a = currentQuestion.dataset.a;
+        const b = currentQuestion.dataset.b;
+        questionBox.innerHTML = `<span>${a} × ${b} = ?</span><span class="answer" hidden></span>`;
+        revealButton.disabled = false;
+        revealButton.textContent = '显示答案';
+      });
+
+      revealButton.addEventListener('click', () => {
+        if (!currentQuestion) return;
+        const answer = questionBox.querySelector('.answer');
+        answer.textContent = `答案：${currentQuestion.dataset.answer}`;
+        answer.hidden = false;
+        revealButton.textContent = '答案已显示';
+        revealButton.disabled = true;
+      });
+    })();
+  </script>
+</body>
+</html>
